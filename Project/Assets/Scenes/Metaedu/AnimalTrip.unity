@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.5013904, g: 0.51258284, b: 0.51399696, a: 1}
+  m_IndirectSpecularColor: {r: 0.759549, g: 0.8795691, b: 0.9365104, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -31652,6 +31652,11 @@ PrefabInstance:
       propertyPath: answerParticleSystem
       value: 
       objectReference: {fileID: 1186380942}
+    - target: {fileID: 8117437587831708364, guid: 644cff11a11eaf643bb9c0f0e8e64866,
+        type: 3}
+      propertyPath: GAME_PROGRESSING_SPEED_COPY
+      value: 6.4
+      objectReference: {fileID: 0}
     - target: {fileID: 8117437587831708364, guid: 644cff11a11eaf643bb9c0f0e8e64866,
         type: 3}
       propertyPath: animalMovePositionToSpotLight
