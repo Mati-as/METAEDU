@@ -906,6 +906,18 @@ public class GameManager : MonoBehaviour
         roundCount = 0;
         answer = null;
     }
+
+    private void OnApplicationQuit()
+    {
+        isGameFinished = false;
+        isGameStarted = false;
+        isCameraArrivedToPlay = false;
+        isRoundFinished = false;
+        isRoundStarted = false;
+        isCorrected = false;
+        roundCount = 0;
+        answer = null;
+    }
 }
 
 

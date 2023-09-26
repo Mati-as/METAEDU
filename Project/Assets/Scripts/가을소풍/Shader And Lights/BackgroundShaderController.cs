@@ -77,8 +77,13 @@ public class BackgroundShaderController : MonoBehaviour
         var currentHorizonColor = Color.Lerp( inPlayBgColor,defaultHorizonColor, _progressWhenFinished);
         SetHorizonColor(currentHorizonColor);
     }
-    
-    
+
+    private void OnDestroy()
+    {
+        SetSkyColor(defaultSkyColor);
+        SetHorizonColor(defaultHorizonColor);
+    }
+
     private void OnApplicationQuit()
     {
         SetSkyColor(defaultSkyColor);

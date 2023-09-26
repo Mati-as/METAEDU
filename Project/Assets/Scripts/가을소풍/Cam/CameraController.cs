@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -42,6 +43,12 @@ public class CameraController : MonoBehaviour
         transform.LookAt(_playStartCamPoint);
         // transform.rotation *= Quaternion.Euler(Xoffset,0,0);
     }
+
+    private void OnApplicationQuit()
+    {
+       UnsubscribeGamaManagerEvents();
+    }
+    
 
     private void Update()
     {

@@ -31655,7 +31655,7 @@ PrefabInstance:
     - target: {fileID: 8117437587831708364, guid: 644cff11a11eaf643bb9c0f0e8e64866,
         type: 3}
       propertyPath: GAME_PROGRESSING_SPEED_COPY
-      value: 6.4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8117437587831708364, guid: 644cff11a11eaf643bb9c0f0e8e64866,
         type: 3}
