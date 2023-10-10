@@ -2,8 +2,11 @@ using System;
 
     public class GameOver : BaseState
     {
-        public IState.GameStateList Gamestate => IState.GameStateList.GameOver;
-        
+        public IState.GameStateList Gamestate
+        {
+            get => Gamestate;
+            set => Gamestate = value; // 값을 설정합니다.
+        }
         public override void Enter()
         {
         }

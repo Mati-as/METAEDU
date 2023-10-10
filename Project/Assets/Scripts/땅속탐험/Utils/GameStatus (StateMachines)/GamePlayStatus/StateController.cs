@@ -6,8 +6,11 @@ namespace 땅속탐험.Utils
     {
         
         public IState currentState;
-        public IState.GameStateList currentStateInfo;
-  
+        public IState.GameStateList currentStateInfo
+        {
+            get => currentStateInfo;
+            set => currentStateInfo = value; // 값을 설정합니다.
+        }
 
         public  override void Enter()
         {

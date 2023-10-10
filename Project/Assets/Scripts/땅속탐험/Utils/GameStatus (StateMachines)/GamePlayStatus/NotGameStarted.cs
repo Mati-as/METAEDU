@@ -2,7 +2,11 @@ namespace 땅속탐험.Utils
 {
     public class NotGameStarted : BaseState
     {
-        public IState.GameStateList Gamestate => IState.GameStateList.NotGameStarted;
+        public IState.GameStateList Gamestate
+        {
+            get => Gamestate;
+            set => Gamestate = value; // 값을 설정합니다.
+        }
         
         public override void Enter()
         {

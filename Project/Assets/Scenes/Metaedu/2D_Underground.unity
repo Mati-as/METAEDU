@@ -2729,6 +2729,42 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 187159047}
   m_CullTransparentMesh: 0
+--- !u!1 &189709021
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 189709022}
+  m_Layer: 0
+  m_Name: Tutorial Away Position
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &189709022
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189709021}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 991379084}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 345}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &201160021
 GameObject:
   m_ObjectHideFlags: 0
@@ -4691,7 +4727,7 @@ PrefabInstance:
     - target: {fileID: 4036545800166664375, guid: 067611276ce8f084fb846d3a807a14b6,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4036545800166664375, guid: 067611276ce8f084fb846d3a807a14b6,
         type: 3}
@@ -5437,8 +5473,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 399610942}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 19.2, y: -16.223698, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 18.859451, y: -16.223698, z: 0}
+  m_LocalScale: {x: 1.0123879, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 144026521}
@@ -6081,9 +6117,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 1118578204}
+  stagesInterval: 0.5
+  UIInterval: 0.1
+  tutorialUIGameObject: {fileID: 1207962558235633198}
   tutorialUICvsGroup: {fileID: 1207962558235633200}
+  tutorialTMPText: {fileID: 1207962557658083416}
+  tutorialUIRectTransform: {fileID: 1207962558235633199}
+  tutorialAwayTransfrom: {fileID: 189709022}
+  tutorialMessage: "\uBC1C\uC790\uAD6D\uC744 \uB530\uB77C\uAC00\uBA70  \uC228\uC5B4\uC788\uB294
+    \uB3D9\uBB3C\uCE5C\uAD6C\uB4E4\uC744 \uCC3E\uC544\uBCF4\uC544\uC694!"
+  storyUIGameObject: {fileID: 6959302046651433354}
+  storyUICvsGroup: {fileID: 6959302046651433355}
+  storyUIRectTransform: {fileID: 6959302046651433349}
+  _storyUITmp: {fileID: 1207962557658083416}
   _uiAudioController: {fileID: 0}
-  _storyUITmp: {fileID: 0}
+  _firstUIMessage: " \uB545\uC18D\uC5D0\uB294 \uB2E4\uC591\uD55C \uB3D9\uBB3C\uCE5C\uAD6C\uAC00
+    \uC0B4\uACE0 \uC788\uC5B4\uC694! \uC800\uB97C \uB530\uB77C\uC624\uBA74\uC11C
+    \uAD6C\uACBD\uD574\uBCFC\uAE4C\uC694?"
+  _lastUIMessage: "\uC6B0\uC640! \uCE5C\uAD6C\uB4E4\uC744 \uBAA8\uB450 \uCC3E\uC558\uC5B4\uC694!"
   playerIcon: {fileID: 0}
   playerIconDefault: {fileID: 0}
   playerIconMovePosition: {fileID: 0}
@@ -6165,6 +6216,7 @@ RectTransform:
   - {fileID: 1207962558235633199}
   - {fileID: 6959302046651433349}
   - {fileID: 339605697}
+  - {fileID: 991379084}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7261,8 +7313,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 508104013}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -16.17, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.58, y: -16.17, z: 0}
+  m_LocalScale: {x: 1.0123879, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 144026521}
@@ -11862,6 +11914,43 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 975400858}
   m_CullTransparentMesh: 1
+--- !u!1 &991379083
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 991379084}
+  m_Layer: 0
+  m_Name: Tween Related Positions
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &991379084
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 991379083}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2.5135357, y: 2.5135357, z: 2.5135357}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 189709022}
+  m_Father: {fileID: 430183926}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &992330752
 GameObject:
   m_ObjectHideFlags: 0
@@ -13796,6 +13885,8 @@ MonoBehaviour:
   UIintroDelayTime:
     value: 0
   isStartButtonClicked:
+    value: 0
+  isStageStartButtonClicked:
     value: 0
 --- !u!4 &1118578205
 Transform:
@@ -28407,7 +28498,7 @@ GameObject:
   - component: {fileID: 1207962556580958832}
   - component: {fileID: 1207962556580958835}
   m_Layer: 0
-  m_Name: "\uD14D\uC2A4\uD2B8 \uBC30\uACBD"
+  m_Name: "\uBC15\uC2A4 \uD504\uB808\uC784"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28623,9 +28714,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63adf8e2bf5ae63418ce6528210d2fdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 1118578204}
+  buttonChangeDuration: 1.3
   _audioSource: {fileID: 0}
-  textBoxUIController: {fileID: 1207962558235633196}
-  _storyUIController: {fileID: 0}
   maximizedSize: 1.2
 --- !u!1 &1207962556708937932
 GameObject:
@@ -29023,7 +29114,7 @@ GameObject:
   - component: {fileID: 1207962557079088815}
   - component: {fileID: 1207962557079088814}
   m_Layer: 0
-  m_Name: "\uC2A4\uD1A0\uB9AC \uBCF8\uBB38"
+  m_Name: Story UI TMP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29353,7 +29444,7 @@ GameObject:
   - component: {fileID: 1207962557404732117}
   - component: {fileID: 1207962557404732116}
   m_Layer: 0
-  m_Name: "\uD14D\uC2A4\uD2B8 \uBC15\uC2A4"
+  m_Name: "\uBC15\uC2A4 \uD504\uB808\uC784"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29679,7 +29770,7 @@ GameObject:
   - component: {fileID: 1207962557658083417}
   - component: {fileID: 1207962557658083416}
   m_Layer: 0
-  m_Name: "\uBCF8\uBB38 \uD558\uB2E8"
+  m_Name: Tutorial UI Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30567,7 +30658,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1207962558235633199
 RectTransform:
   m_ObjectHideFlags: 0
@@ -30591,7 +30682,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.00006866455, y: -9.609375}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 575.824, y: 165.83997}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &1207962558235633200
@@ -31132,13 +31223,26 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6959302046651433349}
+  - component: {fileID: 6959302046651433355}
   m_Layer: 0
-  m_Name: "\uC2A4\uD1A0\uB9AC UI"
+  m_Name: Story UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!225 &6959302046651433355
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6959302046651433354}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &6959302046662470200
 MonoBehaviour:
   m_ObjectHideFlags: 0

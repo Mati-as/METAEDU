@@ -5,7 +5,12 @@ using UnityEngine;
 public class GameStart : MonoBehaviour, IState
     {
         
-        public IState.GameStateList Gamestate => IState.GameStateList.GameStart;
+        public IState.GameStateList Gamestate
+        {
+            get => IState.GameStateList.GameStart;
+            set => Gamestate = value;
+        }
+
         public  void Enter()
         {
             

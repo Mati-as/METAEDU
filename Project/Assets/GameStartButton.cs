@@ -20,7 +20,7 @@ public class GameStartButton : MonoBehaviour
 
     void OnButtonClicked()
     {
-        gameManager.isStartButtonClicked.Value = true;
+        gameManager.isStageStartButtonClicked.Value = true;
     }
     
    
