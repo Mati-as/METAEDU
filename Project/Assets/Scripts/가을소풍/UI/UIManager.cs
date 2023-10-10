@@ -18,8 +18,6 @@ public class UIManager : MonoBehaviour
         return waitForSecondsCache[seconds];
     }
     
-    
-    
     [Header("Reference")]  [Space(10f)]
     [SerializeField]
     private StoryUIController storyUIController;

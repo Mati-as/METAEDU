@@ -2,52 +2,139 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
+using System.Collections.Generic;
 
 public class LightDimmer : MonoBehaviour
 {
+    [Header("RenderSettings: Ambient")] [Space(10f)]
     public float defaultAmbient;
     public float minAmbient;
     private float _currentAmbient;
+    [Header("Directional Light Intensitiy")] [Space(10f)]
     public float defaultIntensity;
     public float decreaseRate;
     public float increaseRate;// Intensity 감소 비율
     public float minIntensity; // 최소 Intensity 값
-
-    [FormerlySerializedAs("lightTurningOffTIme")] [FormerlySerializedAs("spotLightTurnOffSpeed")] public float lightTurningOffTime;
-    [SerializeField] private Light spotlight;
+    public float lightTurningOffTime;
+    [Header("Spotlight")] [Space(10f)]
+    [SerializeField] 
+    private Light spotlight;
+    [SerializeField] 
+    private Light spotlightDownLeft;
+    [SerializeField] 
+    private Light spotlightDownRight;
+    public float spotMaxIntensity;
+    public float spotMaxIntensityDownLeft;
+    public float spotMaxIntensityDownRight;
+    public float spotMinIntensity;
     private Light dirLight; // Directional Light의 Light 컴포넌트
+    private Coroutine lightCoroutineA;
+    private Coroutine lightCoroutineB;
+    private Coroutine lightCoroutineC;
+    private bool _isInitialized;
+    private Coroutine _increaseAmbientAndLightIntensityCoroutine;
+    private float currentIntensity;
+    private float tempLerp;
+    private float elapsedForLight;
+    
+    private Dictionary<float, WaitForSeconds> waitForSecondsCache = new Dictionary<float, WaitForSeconds>();
+
+    private WaitForSeconds GetWaitForSeconds(float seconds)
+    {
+        if (!waitForSecondsCache.ContainsKey(seconds))
+        {
+            waitForSecondsCache[seconds] = new WaitForSeconds(seconds);
+        }
+
+        return waitForSecondsCache[seconds];
+    }
+
+    private void StopCoroutineWithNullCheck()
+    {
+        if (_increaseAmbientAndLightIntensityCoroutine != null &&
+            _decreaseAmbientAndLightIntensityCoroutine != null)
+        {
+            StopCoroutine(_increaseAmbientAndLightIntensityCoroutine);
+            StopCoroutine(_decreaseAmbientAndLightIntensityCoroutine);
+        }
+    }
 
 
+    //Unity Loop
     private void Awake()
     {
-        dirLight = GetComponent<Light>();
 
-        spotlight.enabled = false;
+        StopCoroutineWithNullCheck();
+        dirLight = GetComponent<Light>();
         _currentAmbient = defaultAmbient;
         dirLight.intensity = defaultIntensity;
     }
 
+ 
+
     private void Start()
     {
         SubscribeGameManagerEvents();
-        
-        
+      
         RenderSettings.ambientIntensity = defaultAmbient;
         if (dirLight == null)
             Debug.LogError(
                 "No Light component found on this object. Please attach this script to a Directional Light.");
+        
+        
+        InitializeAndOffLight();
     }
-
   
-   
-    private Coroutine lightCoroutine;
-    private bool _isInitialized;
-    private void Update()
+
+    
+    
+    //Methods
+    private void InitializeAndOffLight()
     {
-        if (GameManager.isGameStarted)
+        spotlight.intensity = 0f; 
+        spotlightDownRight.intensity = 0f; 
+        spotlightDownLeft.intensity = 0f; 
+        
+        spotlight.enabled = false;
+        spotlightDownRight.enabled = false;
+        spotlightDownLeft.enabled = false;
+    
+    }
+    
+
+    private Coroutine _decreaseAmbientAndLightIntensityCoroutine;
+
+    private IEnumerator IncreaseAmbientAndLightIntensity()
+    {
+        while (true)
         {
-            dirLight.intensity -= decreaseRate * Time.deltaTime; // Intensity 감소
+            dirLight.intensity += increaseRate * Time.deltaTime; // Intensity 감소
+            dirLight.intensity = Mathf.Min(dirLight.intensity, defaultIntensity); // Intensity 값이 최소값보다 작아지지 않도록 보장
+            
+            _currentAmbient += increaseRate * Time.deltaTime;
+            RenderSettings.ambientIntensity = Mathf.Min(defaultAmbient,  _currentAmbient);
+        
+         
+            if (_currentAmbient > defaultAmbient)
+            {
+                StopCoroutine(_increaseAmbientAndLightIntensityCoroutine);
+            }
+            
+            yield return null;
+        }
+    }
+       
+   
+    private IEnumerator DecreaseAmbientAndLightIntensity()
+    {
+
+        currentIntensity = dirLight.intensity;
+        while (true)
+        {
+            currentIntensity -= decreaseRate * Time.deltaTime; // Intensity 감소
+            dirLight.intensity = currentIntensity;
             dirLight.intensity = Mathf.Max(dirLight.intensity, minIntensity); // Intensity 값이 최소값보다 작아지지 않도록 보장
+
 
             if (_currentAmbient > 0)
             {
@@ -55,53 +142,51 @@ public class LightDimmer : MonoBehaviour
                 RenderSettings.ambientIntensity = Mathf.Max(_currentAmbient,minAmbient );
             }
             
-           
-        }
-        
-
-        else if (GameManager.isGameFinished)
-        {
+            if (currentIntensity < minIntensity)
+            {
+                Debug.Log($"Amibent 감소중지. 현재 amibient {_currentAmbient}");
+                StopCoroutine(_decreaseAmbientAndLightIntensityCoroutine);
+            }
             
-            dirLight.intensity += increaseRate * Time.deltaTime; // Intensity 감소
-            dirLight.intensity = Mathf.Min(dirLight.intensity, defaultIntensity); // Intensity 값이 최소값보다 작아지지 않도록 보장
-
-            
-            _currentAmbient += increaseRate * Time.deltaTime;
-            RenderSettings.ambientIntensity = Mathf.Min(defaultAmbient,  _currentAmbient);
+            yield return null;
         }
+      
     }
-
-    public float spotMaxIntensity;
-    public float spotMinIntensity;
-  
-    private float tempLerp;
-
-    private float elapsedForLight;
+   
+   
     
-    public float lightChangeTime;
-    IEnumerator  TurnOnSpotLight()
+    [FormerlySerializedAs("lightChangeTime")] 
+    public float lightChangingDuration;
+    IEnumerator TurnOnSpotLight(Light light,float lightChangingDuration,float spotMaxIntensity)
     {
         
         elapsedForLight = 0f;
+        bool isLightEnabled = false;
         
         while (true)
         {
             if (GameManager.isCorrected)
             {
+                if (!isLightEnabled)
+                {
+                    light.enabled = true;
+                    isLightEnabled = true;
+                }
+               
                 elapsedForLight += Time.deltaTime;
-           
-        
-                spotlight.enabled = true;
-                elapsedForLight += Time.deltaTime;
-        
-                var t =  Mathf.Min(1,Mathf.Clamp01(elapsedForLight / lightChangeTime));
+                float t =  elapsedForLight /lightChangingDuration;
             
                 // Intensity 감소
-          
-                float lerp = Lerp2D.EaseInBounce(spotlight.intensity, spotMaxIntensity,t );
-                spotlight.intensity = lerp;
+                float lerp = Lerp2D.EaseInBounce(light.intensity, spotMaxIntensity,t );
+                light.intensity = lerp;
                 // Intensity 값이 최소값보다 작아지지 않도록 보장
                 yield return null;
+                
+                if (light.intensity >= spotMaxIntensity)
+                {
+                    Debug.Log("조명 코루틴 탈출 및 종료");
+                    yield break;
+                }
             }
             else
             {
@@ -113,7 +198,7 @@ public class LightDimmer : MonoBehaviour
        
     }
 
-    IEnumerator  TurnOffSpotLight()
+    IEnumerator TurnOffSpotLight(Light light)
     {
 
         elapsedForLight = 0f;
@@ -121,21 +206,21 @@ public class LightDimmer : MonoBehaviour
         {
             if (GameManager.isRoundFinished)
             {
-                spotlight.enabled = true;
+                light.enabled = true;
                 elapsedForLight += Time.deltaTime;
         
       
         
-                var t =  Mathf.Min(1,Mathf.Clamp01(elapsedForLight / lightTurningOffTime));
+                float t =  elapsedForLight / lightTurningOffTime;
             
                 // Intensity 감소
           
                 float lerp = Lerp2D.EaseInBounce(spotMaxIntensity, spotMinIntensity,t );
-                spotlight.intensity = lerp;
+                light.intensity = lerp;
                 // Intensity 값이 최소값보다 작아지지 않도록 보장
                 yield return null;
             
-                    StopCoroutine( TurnOffSpotLight());
+                    StopCoroutine( TurnOffSpotLight(light));
                 
             }
             else
@@ -156,13 +241,11 @@ public class LightDimmer : MonoBehaviour
     
  
     
- 
-
-
-
 
     private void OnDestroy()
     {
+        dirLight.intensity = defaultIntensity;
+        RenderSettings.ambientIntensity = defaultAmbient;
         UnsubscribeGamaManagerEvents();
     }
     
@@ -170,32 +253,13 @@ public class LightDimmer : MonoBehaviour
 
     private void OnGameStart()
     {
-    }
-
-    private void OnRoundReady()
-    {
-        
+        _decreaseAmbientAndLightIntensityCoroutine =   StartCoroutine(DecreaseAmbientAndLightIntensity());
     }
     
 
-    private void OnRoundStarted()
-    {
-       
-    }
-
-    private void OnCorrect()
-    {
-        StartCoroutine(TurnOnSpotLight());
-    }
-
-    private void OnRoundFinished()
-    {
-        StartCoroutine(TurnOffSpotLight());
-    }
-
     private void OnGameFinished()
     {
-       
+        _increaseAmbientAndLightIntensityCoroutine = StartCoroutine(IncreaseAmbientAndLightIntensity());
     }
 
     
@@ -203,9 +267,7 @@ public class LightDimmer : MonoBehaviour
     {
         GameManager.onGameStartEvent -= OnGameStart;
         GameManager.onGameStartEvent += OnGameStart;
-        
-        GameManager.onRoundReadyEvent -= OnRoundReady;
-        GameManager.onRoundReadyEvent += OnRoundReady;
+      
 
         GameManager.onCorrectedEvent -= TurnOnSpotLightEvent;
         GameManager.onCorrectedEvent += TurnOnSpotLightEvent;
@@ -213,9 +275,7 @@ public class LightDimmer : MonoBehaviour
         GameManager.onRoundFinishedEvent -= TurnOffSpotLightEvent;
         GameManager.onRoundFinishedEvent += TurnOffSpotLightEvent;
 
-        GameManager.onRoundStartedEvent -= OnRoundStarted;
-        GameManager.onRoundStartedEvent += OnRoundStarted;
-        
+    
         GameManager.onGameFinishedEvent -= OnGameFinished;
         GameManager.onGameFinishedEvent += OnGameFinished;
     }
@@ -223,22 +283,32 @@ public class LightDimmer : MonoBehaviour
     private void UnsubscribeGamaManagerEvents()
     {
         GameManager.onGameStartEvent -= OnGameStart;
-        GameManager.onRoundReadyEvent -= OnRoundReady;
+        // GameManager.onRoundReadyEvent -= OnRoundReady;
         GameManager.onCorrectedEvent -= TurnOnSpotLightEvent;
         GameManager.onRoundFinishedEvent -= TurnOffSpotLightEvent;
-        GameManager.onRoundStartedEvent -= OnRoundStarted;
+        // GameManager.onRoundStartedEvent -= OnRoundStarted;
         GameManager.onGameFinishedEvent -= OnGameFinished;
     }
 
     public void TurnOffSpotLightEvent()
     {
-        StopCoroutine(TurnOnSpotLight());
-        lightCoroutine = StartCoroutine(TurnOffSpotLight());
+        StopCoroutine(TurnOnSpotLight(spotlight,lightChangingDuration,spotMaxIntensity));
+        StopCoroutine(TurnOnSpotLight(spotlightDownLeft,lightChangingDuration,spotMaxIntensityDownLeft));
+        StopCoroutine(TurnOnSpotLight(spotlightDownRight,lightChangingDuration,spotMaxIntensityDownRight));
+    
+        lightCoroutineA = StartCoroutine(TurnOffSpotLight(spotlight));
+        lightCoroutineB = StartCoroutine(TurnOffSpotLight(spotlightDownLeft));
+        lightCoroutineC = StartCoroutine(TurnOffSpotLight(spotlightDownRight));
     }
     public void TurnOnSpotLightEvent()
     {
-        StopCoroutine(TurnOffSpotLight());
-        lightCoroutine = StartCoroutine(TurnOnSpotLight());
+        StopCoroutine(TurnOffSpotLight(spotlight));
+        StopCoroutine(TurnOffSpotLight(spotlightDownLeft));
+        StopCoroutine(TurnOffSpotLight(spotlightDownRight));
+        
+        lightCoroutineA = StartCoroutine(TurnOnSpotLight(spotlight,lightChangingDuration,spotMaxIntensity));
+        lightCoroutineB = StartCoroutine(TurnOnSpotLight(spotlightDownLeft,lightChangingDuration,spotMaxIntensityDownLeft));
+        lightCoroutineC = StartCoroutine(TurnOnSpotLight(spotlightDownRight,lightChangingDuration,spotMaxIntensityDownRight));
     }
     
 }
